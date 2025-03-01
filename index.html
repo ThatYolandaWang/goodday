@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日祝福 | Daily Blessing</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-sans antialiased text-gray-900 min-h-screen flex flex-col justify-between p-0 overflow-hidden">
+    <div id="app" x-data="blessingApp()" class="relative h-full w-full">
+        <!-- 背景图片 -->
+        <div class="fixed inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out" 
+             :style="`background-image: url(${backgroundImage})`">
+        </div>
+        
+        <!-- 顶部导航栏 - iPhone屏保风格 -->
+        <div class="relative z-10 flex justify-between items-center px-6 py-4">
+            <div class="text-white text-sm">
+                <span x-text="locationInfo"></span> · <span x-text="currentDate"></span>
+            </div>
+            
+            <div class="flex space-x-3">
+                <button @click="changeBackground()" class="text-white bg-black bg-opacity-30 hover:bg-opacity-40 px-3 py-1 rounded-full text-sm backdrop-filter backdrop-blur-sm transition-all duration-300">
+                    换图
+                </button>
+                <button @click="shareBlessing()" class="text-white bg-black bg-opacity-30 hover:bg-opacity-40 px-3 py-1 rounded-full text-sm backdrop-filter backdrop-blur-sm transition-all duration-300">
+                    分享
+                </button>
+            </div>
+        </div>
+        
+        <!-- 中央内容区域 - iPhone屏保风格 -->
+        <div class="relative z-10 flex flex-col justify-center items-center h-screen px-6 text-center">
+            <!-- 大型时间显示（类似iOS锁屏） -->
+            <h1 class="text-6xl md:text-8xl font-light mb-8 text-white text-shadow-lg tracking-wide" x-text="greeting"></h1>
+            
+            <!-- 中文祝福语 -->
+            <div class="max-w-xl mb-6">
+                <p class="text-2xl md:text-3xl leading-relaxed font-serif text-white text-shadow-lg" x-text="blessing"></p>
+            </div>
+            
+            <!-- 英文祝福语（除非是英语国家，否则显示） -->
+            <div class="max-w-xl" x-show="!isEnglishCountry">
+                <p class="text-xl md:text-2xl leading-relaxed font-en text-white text-opacity-90 text-shadow-md" x-text="englishBlessing"></p>
+            </div>
+        </div>
+        
+        <!-- 页脚 - 简约风格 -->
+        <div class="relative z-10 py-4 px-6 text-white text-sm opacity-70">
+            <p class="text-center">© 2023 每日祝福 · 简约而温暖</p>
+        </div>
+    </div>
+
+    <!-- 先加载配置文件 -->
+    <script src="config.js"></script>
+    <!-- 再加载主脚本 -->
+    <script src="script.js"></script>
+</body>
+</html> 

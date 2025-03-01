@@ -1,0 +1,239 @@
+/* 基础样式 */
+:root {
+  --primary-font: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+  --serif-font: 'Noto Serif SC', serif;
+  --en-font: 'Poppins', sans-serif;
+}
+
+body {
+  font-family: var(--primary-font);
+  color: #fff;
+  transition: all 0.5s ease;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+/* 磨砂玻璃效果增强 */
+.backdrop-filter {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* 自定义动画效果 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+/* iPhone屏保样式 - 时间显示和文字效果 */
+.font-light {
+  font-weight: 300;
+}
+
+.tracking-wide {
+  letter-spacing: 0.025em;
+}
+
+/* 增强的文字阴影效果 */
+.text-shadow-md {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.text-shadow-lg {
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 背景图片覆盖效果 */
+.fixed {
+  position: fixed;
+}
+
+/* 背景暗化滤镜，增加文字可读性 */
+.fixed:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  z-index: 1;
+}
+
+/* 季节性主题颜色 - 可根据季节动态切换 */
+.theme-spring {
+  --accent-color: #a5d6a7;
+}
+
+.theme-summer {
+  --accent-color: #4fc3f7;
+}
+
+.theme-autumn {
+  --accent-color: #ffb74d;
+}
+
+.theme-winter {
+  --accent-color: #90caf9;
+}
+
+/* 适配不同设备和方向 */
+@media (orientation: portrait) {
+  .h-screen {
+    height: 100vh;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .h-screen {
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  .text-6xl {
+    font-size: 3rem;
+  }
+  
+  .mb-8 {
+    margin-bottom: 1rem;
+  }
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+  
+  .text-xl {
+    font-size: 1.1rem;
+  }
+  
+  .p-8 {
+    padding: 1.5rem;
+  }
+}
+
+/* 字体优化 */
+.font-serif {
+  font-family: var(--serif-font);
+  font-weight: 400;
+}
+
+.font-en {
+  font-family: var(--en-font);
+  font-weight: 300;
+}
+
+/* 按钮悬停效果 */
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* iOS风格的容器 */
+.ios-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* 顶部状态栏样式 */
+.top-bar {
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 内容居中样式 */
+.center-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* 底部控制区样式 */
+.bottom-bar {
+  padding: 1rem 1.5rem;
+  text-align: center;
+}
+
+/* 动画：背景图片渐变 */
+@keyframes backgroundFade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.bg-fade-in {
+  animation: backgroundFade 2s ease-in-out;
+}
+
+/* 动画：文本渐入 */
+@keyframes textFadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.text-fade-in {
+  animation: textFadeIn 1s ease-out forwards;
+}
+
+/* 动画：按钮渐入 */
+.delayed-fade {
+  opacity: 0;
+  animation: textFadeIn 0.8s ease-out 0.5s forwards;
+}
+
+/* 确保内容在iOS安全区域内 */
+@supports (padding: max(0px)) {
+  body {
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+}
+
+/* 卡片悬浮效果 */
+.hover\:scale-102:hover {
+  transform: scale(1.02);
+}
+
+/* 文字阴影，提高在背景图片上的可读性 */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 黑暗模式支持 */
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #f8f9fa;
+  }
+  
+  .dark-mode-text {
+    color: #f8f9fa !important;
+  }
+} 
