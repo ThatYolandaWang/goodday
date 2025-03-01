@@ -65,7 +65,9 @@
 ├── index.html         # 主页面HTML文件
 ├── styles.css         # 自定义样式
 ├── script.js          # 页面逻辑和功能实现
-├── config.js          # 配置文件，存储API密钥和其他配置
+├── config.js          # 本地开发配置文件，存储API密钥和其他配置
+├── config.example.js  # 配置文件示例，用于指导用户创建自己的config.js
+├── env-config.js      # 环境配置管理文件，处理不同环境下的配置获取
 └── README.md          # 项目说明文档
 ```
 
@@ -75,9 +77,11 @@
 
 1. API密钥配置：
    - 项目使用了ipinfo.io和Unsplash API
-   - API密钥已存储在`config.js`文件中
-   - 如需更改API密钥，请直接编辑`config.js`文件
-   - **注意：** 在生产环境中，应该考虑使用环境变量或后端服务来保护API密钥
+   - 本地开发：
+     - 复制`config.example.js`为`config.js`
+     - 在`config.js`中填入您的API密钥
+   - 部署环境：
+     - 在Vercel或Netlify中设置环境变量（见下方"部署到Vercel或Netlify"部分）
 
 2. 配置选项：
    - `config.js`文件中还包含其他配置选项，如：
@@ -89,8 +93,9 @@
 ### 本地运行
 
 1. 下载项目文件到本地文件夹
-2. 使用现代浏览器直接打开`index.html`文件
-3. 也可以使用本地开发服务器，如：
+2. 确保您已创建并配置好`config.js`文件
+3. 使用现代浏览器直接打开`index.html`文件
+4. 也可以使用本地开发服务器，如：
    ```
    npx serve
    ```
@@ -102,25 +107,55 @@
 ### 部署到Vercel或Netlify
 
 1. 将代码推送到GitHub仓库
-2. 在Vercel或Netlify连接到您的GitHub仓库
-3. 按照平台指引完成部署
+   - 确保`.gitignore`文件包含`config.js`，防止API密钥被提交
+   - `config.example.js`应该包含在提交中作为配置示例
+
+2. 在Vercel或Netlify中设置环境变量：
+   - Vercel：
+     1. 登录Vercel，选择您的项目
+     2. 进入"Settings" > "Environment Variables"
+     3. 添加以下环境变量：
+        - `IPINFO_TOKEN`：您的ipinfo.io API密钥
+        - `UNSPLASH_API_KEY`：您的Unsplash API密钥
+   
+   - Netlify：
+     1. 登录Netlify，选择您的项目
+     2. 进入"Site settings" > "Build & deploy" > "Environment"
+     3. 添加相同的环境变量
+
+3. 部署项目：
+   - 按照平台指引完成部署
+   - 环境变量会在构建过程中被注入
+
+### 环境配置工作原理
+
+本项目使用`env-config.js`文件实现灵活的环境配置：
+- 在本地开发环境中，配置从`config.js`加载
+- 在Vercel或Netlify上，配置从环境变量加载
+- 无需修改任何代码即可在不同环境间切换
+
+这种实现方式确保：
+1. 本地开发方便直观
+2. API密钥不会被提交到版本控制
+3. 生产环境使用安全的环境变量
 
 ### 安全提示
 
-在生产环境中，不建议将API密钥直接存储在前端代码中。更安全的做法是：
-- 使用环境变量
-- 创建后端API代理
-- 利用Netlify或Vercel的环境变量和无服务器函数
+本项目已实现以下安全实践：
+- 使用`.gitignore`排除含有API密钥的`config.js`
+- 在生产环境使用环境变量
+- 前端代码不会直接暴露API密钥
 
 ## 自定义内容
 
 - 可以在`script.js`中修改祝福语模板
 - 在`styles.css`中调整颜色主题和动画效果
 - 在`index.html`中修改页面结构和文本内容
-- 在`config.js`中调整配置参数
+- 在`config.js`或环境变量中调整配置参数
 
 ## 项目更新日志
 
 - **2023-11-01** - 创建项目规划文档
 - **2023-11-02** - 实现基础项目代码
-- **2023-11-03** - 添加配置文件，分离API密钥 
+- **2023-11-03** - 添加配置文件，分离API密钥
+- **2023-11-04** - 实现环境配置系统，支持Vercel部署 

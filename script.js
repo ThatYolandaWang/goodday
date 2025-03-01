@@ -27,7 +27,7 @@ function blessingApp() {
             this.loadRandomBackground();
             
             // 每分钟更新一次时间
-            setInterval(() => this.updateDateTime(), CONFIG.AUTO_REFRESH_INTERVAL);
+            setInterval(() => this.updateDateTime(), ENV_CONFIG.AUTO_REFRESH_INTERVAL);
         },
         
         // 更新日期和时间
@@ -39,7 +39,7 @@ function blessingApp() {
                 day: 'numeric', 
                 weekday: 'long' 
             };
-            this.currentDate = now.toLocaleDateString(CONFIG.DEFAULT_LANGUAGE, options);
+            this.currentDate = now.toLocaleDateString(ENV_CONFIG.DEFAULT_LANGUAGE, options);
             
             // 根据时间更新问候语
             const hour = now.getHours();
@@ -78,8 +78,8 @@ function blessingApp() {
         // 获取位置信息
         async fetchLocationInfo() {
             try {
-                // 使用配置文件中的API密钥
-                const response = await fetch(`https://ipinfo.io/json?token=${CONFIG.IPINFO_TOKEN}`);
+                // 使用环境配置中的API密钥
+                const response = await fetch(`https://ipinfo.io/json?token=${ENV_CONFIG.IPINFO_TOKEN}`);
                 if (!response.ok) throw new Error('获取位置信息失败');
                 
                 const data = await response.json();
@@ -299,43 +299,25 @@ function blessingApp() {
             }
         },
         
-        // 加载随机背景
+        // 加载随机背景图片
         async loadRandomBackground() {
             try {
-                // 定义更符合年轻人审美的关键词
-                const modernKeywords = {
-                    spring: 'urban+lifestyle+modern+spring',
-                    summer: 'street+fashion+summer+vibes',
-                    autumn: 'urban+autumn+style+minimal',
-                    winter: 'city+lights+winter+night'
-                };
-                
-                // 备用时尚关键词
-                const fashionKeywords = [
-                    'street+style+modern',
-                    'urban+exploration',
-                    'city+vibes+aesthetic',
-                    'minimal+fashion+photography',
-                    'architectural+photography+modern',
-                    'neon+lights+city',
-                    'tech+aesthetic+minimal',
-                    'coffee+culture+modern',
-                    'urban+portrait+lifestyle',
-                    'contemporary+design+minimal'
+                // 获取适合年轻人口味的图片
+                const keywords = [
+                    'street+style+modern', 
+                    'urban+exploration', 
+                    'minimalist+landscape', 
+                    'aesthetic+photography'
                 ];
+                const randomKeyword = keywords[Math.floor(Math.random() * keywords.length)];
                 
-                // 随机选择一个时尚关键词或使用季节相关的现代关键词
-                let keyword;
-                if (Math.random() > 0.5) {
-                    keyword = modernKeywords[this.season] || 'modern+lifestyle';
-                } else {
-                    keyword = fashionKeywords[Math.floor(Math.random() * fashionKeywords.length)];
-                }
+                // 使用季节关键词+随机关键词，获取更相关的图片
+                const seasonKeyword = this.season || 'nature';
+                const searchQuery = `${seasonKeyword}+${randomKeyword}`;
+                const orientation = ENV_CONFIG.IMAGE_ORIENTATION || 'landscape';
                 
-                const orientation = CONFIG.IMAGE_ORIENTATION;
-                
-                // 使用配置文件中的API密钥
-                const url = `https://api.unsplash.com/photos/random?query=${keyword}&orientation=${orientation}&client_id=${CONFIG.UNSPLASH_API_KEY}`;
+                // 使用环境配置中的API密钥
+                const url = `https://api.unsplash.com/photos/random?query=${searchQuery}&orientation=${orientation}&client_id=${ENV_CONFIG.UNSPLASH_API_KEY}`;
                 
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('获取图片失败');
@@ -343,13 +325,40 @@ function blessingApp() {
                 const data = await response.json();
                 this.backgroundImage = data.urls.regular;
                 
+                // 预加载图片
+                const img = new Image();
+                img.src = this.backgroundImage;
+                
+                // 向HTML添加图片创作者的信息
+                const credit = document.createElement('div');
+                credit.className = 'photo-credit';
+                credit.innerHTML = `Photo by <a href="${data.user.links.html}?utm_source=daily_blessing&utm_medium=referral" target="_blank">${data.user.name}</a> on <a href="https://unsplash.com/?utm_source=daily_blessing&utm_medium=referral" target="_blank">Unsplash</a>`;
+                document.body.appendChild(credit);
+                
             } catch (error) {
                 console.error('加载背景图片出错:', error);
-                // 使用备用图片
-                if (CONFIG.USE_BACKUP_IMAGE) {
-                    this.backgroundImage = `https://source.unsplash.com/random/1920x1080/?urban,minimal,modern`;
+                
+                // 在API失败时使用备用图片
+                if (ENV_CONFIG.USE_BACKUP_IMAGE) {
+                    this.useBackupImage();
                 }
             }
+        },
+        
+        // 使用备用图片
+        useBackupImage() {
+            // 备用图片集合
+            const backupImages = [
+                'https://images.unsplash.com/photo-1470770841072-f978cf4d019e',
+                'https://images.unsplash.com/photo-1501854140801-50d01698950b',
+                'https://images.unsplash.com/photo-1496449903678-68ddcb189a24',
+                'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b',
+                'https://images.unsplash.com/photo-1583591900414-7031eb309cb6'
+            ];
+            
+            // 随机选择一张备用图片
+            const randomIndex = Math.floor(Math.random() * backupImages.length);
+            this.backgroundImage = backupImages[randomIndex];
         },
         
         // 更换背景图片

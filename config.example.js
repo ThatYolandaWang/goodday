@@ -1,10 +1,13 @@
 /**
  * 配置文件示例 - 存储API密钥和其他配置信息
- * 使用说明：复制此文件并重命名为config.js，然后填入您的API密钥
- * 注意：在生产环境中，应该使用环境变量或后端服务来保护API密钥
+ * 使用说明：
+ * 1. 复制此文件并重命名为config.js
+ * 2. 填入您的API密钥和其他配置选项
+ * 3. 本地开发时将使用此文件中的配置
  */
 
-const CONFIG = {
+// 设置为全局对象，以便在env-config.js中访问
+window.CONFIG = {
     // API密钥 - 请替换为您自己的密钥
     IPINFO_TOKEN: '您的IPINFO_TOKEN',
     UNSPLASH_API_KEY: '您的UNSPLASH_API_KEY',
